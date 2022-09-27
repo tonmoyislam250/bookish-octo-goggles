@@ -24,8 +24,8 @@ setdefaulttimeout(600)
 botStartTime = time()
 
 basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    handlers=[FileHandler('log.txt'), StreamHandler()],
-                    level=INFO)
+            handlers=[FileHandler('log.txt'), StreamHandler()],
+            level=INFO)
 
 LOGGER = getLogger(__name__)
 
@@ -48,8 +48,10 @@ except:
 
 load_dotenv('config.env', override=True)
 
+
 def getConfig(name: str):
     return environ[name]
+
 
 try:
     NETRC_URL = getConfig('NETRC_URL')
@@ -97,13 +99,6 @@ DRIVES_NAMES = []
 DRIVES_IDS = []
 INDEX_URLS = []
 
-try:
-    if bool(getConfig('_____REMOVE_THIS_LINE_____')):
-        log_error('The README.md file there to be read! Exiting now!')
-        exit()
-except:
-    pass
-
 aria2 = ariaAPI(
     ariaClient(
         host="http://localhost",
@@ -112,8 +107,10 @@ aria2 = ariaAPI(
     )
 )
 
+
 def get_client():
     return qbClient(host="localhost", port=8090)
+
 
 DOWNLOAD_DIR = None
 BOT_TOKEN = None
@@ -164,9 +161,11 @@ try:
     DOWNLOAD_DIR = getConfig('DOWNLOAD_DIR')
     if not DOWNLOAD_DIR.endswith("/"):
         DOWNLOAD_DIR = DOWNLOAD_DIR + '/'
-    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
+    DOWNLOAD_STATUS_UPDATE_INTERVAL = int(
+        getConfig('DOWNLOAD_STATUS_UPDATE_INTERVAL'))
     OWNER_ID = int(getConfig('OWNER_ID'))
-    AUTO_DELETE_MESSAGE_DURATION = int(getConfig('AUTO_DELETE_MESSAGE_DURATION'))
+    AUTO_DELETE_MESSAGE_DURATION = int(
+        getConfig('AUTO_DELETE_MESSAGE_DURATION'))
     TELEGRAM_API = getConfig('TELEGRAM_API')
     TELEGRAM_HASH = getConfig('TELEGRAM_HASH')
 except:
@@ -174,15 +173,18 @@ except:
     exit(1)
 
 LOGGER.info("Generating BOT_SESSION_STRING")
-app = Client(name='pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, parse_mode=enums.ParseMode.HTML, no_updates=True)
+app = Client(name='pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH,
+             bot_token=BOT_TOKEN, parse_mode=enums.ParseMode.HTML, no_updates=True)
 
 try:
     USER_SESSION_STRING = getConfig('USER_SESSION_STRING')
     if len(USER_SESSION_STRING) == 0:
         raise KeyError
-    rss_session = Client(name='rss_session', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, session_string=USER_SESSION_STRING, parse_mode=enums.ParseMode.HTML, no_updates=True)
+    rss_session = Client(name='rss_session', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH,
+                         session_string=USER_SESSION_STRING, parse_mode=enums.ParseMode.HTML, no_updates=True)
 except:
     rss_session = None
+
 
 def aria2c_init():
     try:
@@ -197,6 +199,8 @@ def aria2c_init():
             aria2.remove([download], force=True, files=True)
     except Exception as e:
         log_error(f"Aria2c initializing error: {e}")
+
+
 Thread(target=aria2c_init).start()
 
 try:
@@ -221,9 +225,11 @@ if MEGA_KEY is not None:
                 log_error(e.message['message'])
                 exit(0)
         else:
-            log_info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
+            log_info(
+                "Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
     except:
-        log_info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
+        log_info(
+            "Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
 else:
     sleep(1.5)
 
@@ -379,7 +385,8 @@ try:
             with open('token.pickle', 'wb+') as f:
                 f.write(res.content)
         else:
-            log_error(f"Failed to download token.pickle, link got HTTP response: {res.status_code}")
+            log_error(
+                f"Failed to download token.pickle, link got HTTP response: {res.status_code}")
     except Exception as e:
         log_error(f"TOKEN_PICKLE_URL: {e}")
 except:
@@ -394,7 +401,8 @@ try:
             with open('accounts.zip', 'wb+') as f:
                 f.write(res.content)
         else:
-            log_error(f"Failed to download accounts.zip, link got HTTP response: {res.status_code}")
+            log_error(
+                f"Failed to download accounts.zip, link got HTTP response: {res.status_code}")
     except Exception as e:
         log_error(f"ACCOUNTS_ZIP_URL: {e}")
         raise KeyError
@@ -413,7 +421,8 @@ try:
             with open('drive_folder', 'wb+') as f:
                 f.write(res.content)
         else:
-            log_error(f"Failed to download drive_folder, link got HTTP response: {res.status_code}")
+            log_error(
+                f"Failed to download drive_folder, link got HTTP response: {res.status_code}")
     except Exception as e:
         log_error(f"MULTI_SEARCH_URL: {e}")
 except:
@@ -428,7 +437,8 @@ try:
             with open('cookies.txt', 'wb+') as f:
                 f.write(res.content)
         else:
-            log_error(f"Failed to download cookies.txt, link got HTTP response: {res.status_code}")
+            log_error(
+                f"Failed to download cookies.txt, link got HTTP response: {res.status_code}")
     except Exception as e:
         log_error(f"YT_COOKIES_URL: {e}")
 except:
@@ -458,7 +468,8 @@ try:
 except:
     SEARCH_PLUGINS = None
 
-updater = tgUpdater(token=BOT_TOKEN, request_kwargs={'read_timeout': 20, 'connect_timeout': 15})
+updater = tgUpdater(token=BOT_TOKEN, request_kwargs={
+                    'read_timeout': 20, 'connect_timeout': 15})
 bot = updater.bot
 dispatcher = updater.dispatcher
 job_queue = updater.job_queue
