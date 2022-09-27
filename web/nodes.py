@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-# (c) YashDK [yash-dk@github]
-
 from anytree import NodeMixin
+
 
 class TorNode(NodeMixin):
     def __init__(self, name, is_folder=False, is_file=False, parent=None, progress=None, size=None, priority=None, file_id=None):
@@ -63,15 +61,19 @@ def make_tree(res):
                 # if the node is not found then create the folder node
                 # if the node is found then use it as base for the next
                 if current_node is None:
-                    previous_node = TorNode(folders[j],parent=previous_node,is_folder=True)
+                    previous_node = TorNode(
+                        folders[j], parent=previous_node, is_folder=True)
                 else:
                     previous_node = current_node
             # at this point the previous_node will contain the deepest folder in it so add the file to it
-            TorNode(folders[-1],is_file=True,parent=previous_node,progress=i.progress,size=i.size,priority=i.priority,file_id=l)
+            TorNode(folders[-1], is_file=True, parent=previous_node,
+                    progress=i.progress, size=i.size, priority=i.priority, file_id=l)
         else:
             # at the file to the parent if no folders are there
-            TorNode(folders[-1],is_file=True,parent=parent,progress=i.progress,size=i.size,priority=i.priority,file_id=l)
+            TorNode(folders[-1], is_file=True, parent=parent,
+                    progress=i.progress, size=i.size, priority=i.priority, file_id=l)
     return parent
+
 
 """
 def print_tree(parent):
@@ -79,6 +81,7 @@ def print_tree(parent):
         treestr = u"%s%s" % (pre, node.name)
         print(treestr.ljust(8), node.is_folder, node.is_file)
 """
+
 
 def create_list(par, msg):
     if par.name != ".unwanted":
@@ -88,7 +91,7 @@ def create_list(par, msg):
             msg[0] += "<li>"
             if i.name != ".unwanted":
                 msg[0] += f"<input type=\"checkbox\" name=\"foldernode_{msg[1]}\"> <label for=\"{i.name}\">{i.name}</label>"
-            create_list(i,msg)
+            create_list(i, msg)
             msg[0] += "</li>"
             msg[1] += 1
         else:
